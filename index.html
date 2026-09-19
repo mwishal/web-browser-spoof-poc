@@ -34,17 +34,12 @@
 
   <script>
     document.getElementById('loginBtn').addEventListener('click', function () {
-      // Tandai bahwa user ingin masuk mode fullscreen di halaman berikutnya
-      sessionStorage.setItem('wantFullscreen', '1');
+      try {
+        sessionStorage.setItem('wantFullscreen', '1');
+      } catch (e) {}
 
-      // (Opsional) Coba fullscreen di halaman ini dulu —
-      // sebagian browser meneruskan status ini, sebagian tidak.
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      }
-
-      // Pindah ke bar.html
-      window.location.href = 'https://mwishal.github.io/bar/bar.html';
+      // Redirect — pakai replace() agar tidak bisa di-back ke halaman ini
+      window.location.replace('https://mwishal.github.io/bar/bar.html');
     });
   </script>
 </body>
