@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in - Google Accounts (Clone Riset)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    background: #fff;
+    color: #202124;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    min-height: 100vh;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 448px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 48px 40px 36px;
+    background: #fff;
+    text-align: center;
+  }
+
+  .logo {
+    width: 75px;
+    height: 24px;
+    margin: 0 auto 16px;
+    display: block;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    color: #202124;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    color: #202124;
+    margin-bottom: 32px;
+  }
+
+  .field {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 13px 15px;
+    font-size: 16px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    background: transparent;
+    color: #202124;
+  }
+
+  .field input:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 1px #1a73e8 inset;
+  }
+
+  .field label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    padding: 0 4px;
+    color: #5f6368;
+    font-size: 16px;
+    pointer-events: none;
+    transition: all .15s ease;
+  }
+
+  .field input:focus + label,
+  .field input:not(:placeholder-shown) + label {
+    top: 0;
+    font-size: 12px;
+    color: #1a73e8;
+  }
+
+  .field input:not(:focus):not(:placeholder-shown) + label {
+    color: #5f6368;
+  }
+
+  .forgot {
+    display: inline-block;
+    margin-top: 4px;
+    color: #1a73e8;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .forgot:hover { text-decoration: underline; }
+
+  .info {
+    text-align: left;
+    margin-top: 36px;
+    font-size: 14px;
+    color: #5f6368;
+    line-height: 1.5;
+  }
+
+  .info a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .info a:hover { text-decoration: underline; }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+  }
+
+  .btn-text {
+    background: none;
+    border: none;
+    color: #1a73e8;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-text:hover { background: rgba(26,115,232,0.04); }
+
+  .btn-primary {
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: .25px;
+    transition: background .15s, box-shadow .15s;
+  }
+  .btn-primary:hover {
+    background: #1b66c9;
+    box-shadow: 0 1px 2px rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+  }
+
+  .footer {
+    width: 100%;
+    max-width: 448px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    font-size: 12px;
+    color: #5f6368;
+    padding: 0 4px;
+  }
+
+  .footer select {
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    color: #5f6368;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .footer select:hover { background: #f1f3f4; }
+
+  .footer-links a {
+    color: #5f6368;
+    text-decoration: none;
+    margin-left: 24px;
+    padding: 6px 0;
+  }
+  .footer-links a:hover { color: #202124; }
+
+  /* ====== Modal / Popup ====== */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(32,33,36,.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 1000;
+    animation: fade .15s ease;
+  }
+  .overlay.show { display: flex; }
+
+  @keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+
+  .modal {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    padding: 24px;
+    text-align: left;
+    box-shadow: 0 24px 38px rgba(0,0,0,.14), 0 9px 46px rgba(0,0,0,.12);
+    animation: pop .18s ease;
+  }
+
+  @keyframes pop {
+    from { transform: translateY(8px) scale(.98); opacity: 0 }
+    to   { transform: translateY(0)  scale(1);    opacity: 1 }
+  }
+
+  .modal h2 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #202124;
+    margin-bottom: 12px;
+  }
+
+  .modal p {
+    font-size: 14px;
+    color: #5f6368;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .modal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .modal .btn-text.danger { color: #d93025; }
+  .modal .btn-text.danger:hover { background: rgba(217,48,37,.06); }
+
+  @media (max-width: 480px) {
+    .card {
+      border: none;
+      padding: 24px 0;
+      border-radius: 0;
+    }
+    .footer {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .footer-links a { margin-left: 0; margin-right: 16px; }
+  }
+</style>
+</head>
+<body>
+
+  <main class="card">
+    <!-- Google logo -->
+    <svg class="logo" viewBox="0 0 75 24" xmlns="http://www.w3.org/2000/svg" aria-label="Google">
+      <path fill="#4285F4" d="M10.6 12.2c0-.7-.06-1.36-.18-2H5.44v3.79h2.9a2.48 2.48 0 0 1-1.08 1.63v1.35h1.75c1.02-.94 1.6-2.33 1.6-3.97z"/>
+      <path fill="#34A853" d="M5.44 17.5c1.46 0 2.68-.48 3.57-1.31l-1.75-1.35c-.48.32-1.1.51-1.82.51-1.4 0-2.59-.95-3.01-2.22H.64v1.39a5.36 5.36 0 0 0 4.8 2.98z"/>
+      <path fill="#FBBC05" d="M2.43 13.13a3.22 3.22 0 0 1 0-2.05V9.69H.64a5.36 5.36 0 0 0 0 4.83l1.79-1.39z"/>
+      <path fill="#EA4335" d="M5.44 8.86c.79 0 1.5.27 2.06.8l1.54-1.54A5.4 5.4 0 0 0 5.44 6.7 5.36 5.36 0 0 0 .64 9.69l1.79 1.39c.42-1.27 1.61-2.22 3.01-2.22z"/>
+      <text x="19" y="17" font-family="Product Sans, Arial, sans-serif" font-size="17" fill="#5f6368">Google</text>
+    </svg>
+
+    <h1>Sign in</h1>
+    <p class="subtitle">Use your Google Account</p>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <input type="email" id="email" placeholder=" " autocomplete="off" required>
+        <label for="email">Email or phone</label>
+      </div>
+
+      <div class="field">
+        <input type="password" id="password" placeholder=" " autocomplete="off" required>
+        <label for="password">Enter your password</label>
+      </div>
+
+      <a class="forgot" href="#">Forgot email?</a>
+
+      <div class="info">
+        Not your computer? Use Guest mode to sign in privately.
+        <a href="#">Learn more</a>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-text">Create account</button>
+        <button type="submit" class="btn-primary">Next</button>
+      </div>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <select aria-label="Pilih bahasa">
+      <option>English (United States)</option>
+      <option>Bahasa Indonesia</option>
+      <option>Español</option>
+      <option>日本語</option>
+    </select>
+    <nav class="footer-links">
+      <a href="#">Help</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </nav>
+  </footer>
+
+  <!-- POPUP -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <h2 id="modalTitle">⚠️ Fake Google</h2>
+      <p>
+        Ini halaman <strong>tiruan untuk riset/edukasi</strong>.
+        Tidak ada data yang dikirim atau disimpan. Jangan pernah memasukkan
+        kata sandi asli ke halaman buatan sendiri atau tidak resmi.
+      </p>
+      <div class="modal-actions">
+        <button type="button" class="btn-text danger" id="btnClear">Hapus input</button>
+        <button type="button" class="btn-primary" id="btnClose">Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const form      = document.getElementById('loginForm');
+  const emailEl   = document.getElementById('email');
+  const passEl    = document.getElementById('password');
+
+  const overlay   = document.getElementById('overlay');
+  const btnClose  = document.getElementById('btnClose');
+  const btnClear  = document.getElementById('btnClear');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!emailEl.checkValidity()) { emailEl.reportValidity(); return; }
+    if (!passEl.value)            { passEl.reportValidity();  return; }
+    showPopup();
+  });
+
+  function showPopup() {
+    overlay.classList.add('show');
+    btnClose.focus();
+  }
+  function hidePopup() {
+    overlay.classList.remove('show');
+  }
+
+  btnClose.addEventListener('click', hidePopup);
+
+  btnClear.addEventListener('click', () => {
+    emailEl.value = '';
+    passEl.value  = '';
+    hidePopup();
+    emailEl.focus();
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) hidePopup();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('show')) hidePopup();
+  });
+</script>
+
+</body>
+</html>
