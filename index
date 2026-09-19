@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login PoC</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f0f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Tampilan Awal */
+        #main-view {
+            text-align: center;
+        }
+
+        .blue-btn {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: background-color 0.2s;
+        }
+
+        .blue-btn:hover {
+            background-color: #1557b0;
+        }
+
+        /* Tampilan Halaman Login Tiruan */
+        #fake-login-view {
+            display: none; /* Sembunyikan awalnya */
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .fake-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .fake-logo span:nth-child(1) { color: #4285F4; }
+        .fake-logo span:nth-child(2) { color: #EA4335; }
+        .fake-logo span:nth-child(3) { color: #FBBC05; }
+        .fake-logo span:nth-child(4) { color: #4285F4; }
+        .fake-logo span:nth-child(5) { color: #34A853; }
+        .fake-logo span:nth-child(6) { color: #EA4335; }
+
+        #fake-login-view h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: 400;
+            color: #202124;
+        }
+
+        #fake-login-view p {
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #5f6368;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border: 2px solid #1a73e8;
+        }
+
+        .fake-login-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tampilan Awal (Tombol Utama) -->
+    <div id="main-view">
+        <button id="start-btn" class="blue-btn">Login to your Google Account</button>
+    </div>
+
+    <!-- Tampilan Login Tiruan (Mockup) -->
+    <div id="fake-login-view">
+        <div class="fake-logo">
+            <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+        </div>
+        <h2>Sign in</h2>
+        <p>Use your Google Account</p>
+        
+        <div class="input-group">
+            <input type="text" placeholder="Email or phone" id="fake-email">
+        </div>
+        
+        <!-- Tombol Login Tiruan -->
+        <button id="fake-login-btn" class="blue-btn fake-login-btn">Login</button>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const mainView = document.getElementById('main-view');
+        const fakeLoginView = document.getElementById('fake-login-view');
+        const fakeLoginBtn = document.getElementById('fake-login-btn');
+
+        // 1. Saat tombol awal diklik, ganti tampilan ke halaman login tiruan
+        startBtn.addEventListener('click', () => {
+            mainView.style.display = 'none';
+            fakeLoginView.style.display = 'block';
+        });
+
+        // 2. Saat tombol "Login" di halaman tiruan diklik, munculkan popup "Fake Google"
+        fakeLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Mencegah form submit (jika ada)
+            
+            // Popup penanda bahwa ini adalah PoC palsu
+            alert("Fake Google");
+            
+            // Catatan untuk Bug Bounty: 
+            // Di skenario nyata, di sini penyerang akan mengirim data ke server mereka.
+            // Namun untuk PoC ini, kita hanya menampilkan alert.
+        });
+    </script>
+
+</body>
+</html>
