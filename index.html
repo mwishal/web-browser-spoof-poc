@@ -27,6 +27,15 @@
     .btn:hover {
       background-color: #1666cc;
     }
+    iframe.fs {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      z-index: 9999;
+      background: #fff;
+    }
   </style>
 </head>
 <body>
@@ -34,12 +43,24 @@
 
   <script>
     document.getElementById('loginBtn').addEventListener('click', function () {
-      try {
-        sessionStorage.setItem('wantFullscreen', '1');
-      } catch (e) {}
+      // 1) Buat iframe yang memuat bar.html
+      const iframe = document.createElement('iframe');
+      iframe.className = 'fs';
+      iframe.src = 'https://mwishal.github.io/bar/bar.html';
+      iframe.allow = 'fullscreen';
+      document.body.appendChild(iframe);
 
-      // Redirect — pakai replace() agar tidak bisa di-back ke halaman ini
-      window.location.replace('https://mwishal.github.io/bar/bar.html');
+      // 2) Masukkan iframe ke fullscreen — masih dalam "user gesture" dari klik
+      const req =
+        iframe.requestFullscreen ||
+        iframe.webkitRequestFullscreen ||
+        iframe.msRequestFullscreen;
+
+      if (req) {
+        req.call(iframe).catch((err) => {
+          console.warn('Fullscreen ditolak:', err);
+        });
+      }
     });
   </script>
 </body>
