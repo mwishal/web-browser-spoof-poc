@@ -15,7 +15,7 @@
       font-family: Arial, sans-serif;
     }
     .btn {
-      background-color: #1a73e8;   /* biru khas */
+      background-color: #1a73e8;
       color: #ffffff;
       border: none;
       padding: 14px 28px;
@@ -30,6 +30,22 @@
   </style>
 </head>
 <body>
-  <button class="btn">Log in to your Google Account</button>
+  <button class="btn" id="loginBtn">Log in to your Google Account</button>
+
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', function () {
+      // Tandai bahwa user ingin masuk mode fullscreen di halaman berikutnya
+      sessionStorage.setItem('wantFullscreen', '1');
+
+      // (Opsional) Coba fullscreen di halaman ini dulu —
+      // sebagian browser meneruskan status ini, sebagian tidak.
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+
+      // Pindah ke bar.html
+      window.location.href = 'bar.html';
+    });
+  </script>
 </body>
 </html>
